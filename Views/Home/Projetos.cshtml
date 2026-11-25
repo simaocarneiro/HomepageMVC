@@ -2,9 +2,11 @@
 
 @{
     ViewData["Title"] = "Projetos e Perfil";
+    var termoAtual = ViewData["TermoPesquisa"] as string;
 }
 
 <div class="container py-4">
+    <!-- Secção de Perfil -->
     <div class="card bg-light border-0 shadow-sm p-4 mb-5">
         <div class="row align-items-center">
             <div class="col-md-8">
@@ -18,21 +20,60 @@
         </div>
     </div>
 
-    <h1 class="mb-4">Meus Projetos</h1>
-    <p class="text-muted mb-4">Lista de projetos gerada dinamicamente a partir do Model principal.</p>
-    
-    <div class="row">
-        @foreach (var projeto in Model.ListaProjetos)
+    <h1 class="mb-3">Meus Projetos</h1>
+
+    <!-- Formulário de Pesquisa (GET) -->
+    <form method="get" class="row g-2 mb-4">
+        <div class="col-sm-8 col-md-6">
+            <input type="text"
+                   name="termo"
+                   value="@termoAtual"
+                   placeholder="Pesquisar por título, descrição ou tecnologia..."
+                   class="form-control" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </div>
+        @if (!string.IsNullOrWhiteSpace(termoAtual))
         {
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow-sm p-3">
-                    <div class="card-body">
-                        <h3 class="card-title h5 font-weight-bold">@projeto.Titulo</h3>
-                        <p class="card-text">@projeto.Descricao</p>
-                        <span class="badge bg-primary">@projeto.Tecnologia</span>
-                    </div>
-                </div>
+            <div class="col-auto">
+                <a asp-controller="Home" asp-action="Projetos" class="btn btn-outline-secondary">Limpar</a>
             </div>
         }
-    </div>
+    </form>
+
+    @if (!string.IsNullOrWhiteSpace(termoAtual))
+    {
+        <p class="text-muted mb-4">
+            A mostrar <strong>@Model.ListaProjetos.Count</strong> resultado(s) para "<strong>@termoAtual</strong>".
+        </p>
+    }
+    else
+    {
+        <p class="text-muted mb-4">Lista de projetos filtrável via Query Parameter.</p>
+    }
+
+    @if (Model.ListaProjetos.Count == 0)
+    {
+        <div class="alert alert-warning">
+            Não foram encontrados projetos para o termo "<strong>@termoAtual</strong>".
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var projeto in Model.ListaProjetos)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm p-3">
+                        <div class="card-body">
+                            <h3 class="card-title h5 font-weight-bold">@projeto.Titulo</h3>
+                            <p class="card-text">@projeto.Descricao</p>
+                            <span class="badge bg-primary">@projeto.Tecnologia</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </div>
