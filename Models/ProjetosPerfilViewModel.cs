@@ -4,7 +4,7 @@ namespace HomePageMVC.Models
 {
     public class ProjetosPerfilViewModel
     {
-        public required Perfil PerfilInfo { get; set;}
-        public required List<Projeto> ListaProjetos { get; set; }
+        public Perfil PerfilInfo { get; set; } = new Perfil();
+        public List<Projeto> ListaProjetos { get; set; } = new List<Projeto>();
     }
 }
